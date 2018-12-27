@@ -1,5 +1,6 @@
 <template>
   <div class="row flex-center">
+
     <div
       class="drop-zone flex flex-center"
       @click="$refs.uploader.click()"
@@ -7,15 +8,17 @@
       @drop.stop.prevent="onFilesDrop">
       <div class="text-neutral text-center q-pa-md">
         <q-icon class="q-pb-md" name="add box" size="48px" />
-        <div>Drop files here or click to select</div>
+        <div>Drop files here or click to select (1.5 GB max)</div>
       </div>
     </div>
+
     <input
       ref="uploader"
       class="hidden"
       type="file"
       multiple
       @change="onFilesSelect">
+
   </div>
 </template>
 
@@ -26,6 +29,8 @@ const {
   mapActions: mapFileHasherActions
 } = createNamespacedHelpers('fileHasher');
 
+const MAX_FILE_SIZE = 1024 * 1024 * 1024 * 1.5; // 1.5 GB
+
 export default {
   name: 'file-picker',
   methods: {
@@ -33,11 +38,19 @@ export default {
     onFilesSelect() {
       const files = Array.from(this.$refs.uploader.files || []);
       this.$refs.uploader.value = '';
-      this.addFiles(files);
+      this.validateAndAdd(files);
     },
     onFilesDrop(e) {
-      const files = e.dataTransfer && e.dataTransfer.files || [];
-      this.addFiles(files);
+      const files = Array.from(e.dataTransfer.files || []);
+      this.validateAndAdd(files);
+    },
+    validateAndAdd(files) {
+      const validFiles = files.filter(file => {
+        if (file.size < MAX_FILE_SIZE) return true;
+        this.$q.notify(`File '${file.name}' is ignored (> 1.5 GB)`);
+        return false;
+      });
+      this.addFiles(validFiles);
     }
   }
 };

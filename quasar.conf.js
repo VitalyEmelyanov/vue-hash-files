@@ -4,6 +4,8 @@ module.exports = function (ctx) {
   return {
     // app plugins (/src/plugins)
     plugins: [
+      'file-size-filter',
+      'file-type-filter'
     ],
     css: [
       'app.styl'
@@ -41,6 +43,7 @@ module.exports = function (ctx) {
     framework: {
       components: [
         'QLayout',
+        'QProgress',
         'QLayoutHeader',
         'QLayoutDrawer',
         'QPageContainer',
@@ -48,7 +51,7 @@ module.exports = function (ctx) {
         'QToolbar',
         'QToolbarTitle',
         'QCard',
-        'QScrollArea',
+        'QSpinner',
         'QBtn',
         'QIcon',
         'QList',

@@ -2,9 +2,9 @@
 const routes = [
   {
     path: '/',
-    component: () => import('layouts/Default.vue'),
+    component: () => import('layouts/Default'),
     children: [
-      {path: '', component: () => import('pages/Index.vue')}
+      {path: '', component: () => import('pages/FileHasher')}
     ]
   }
 ];

@@ -1,19 +1,26 @@
+import {FileHashCalculator} from '../utils/FileHashCalculator';
+
 const ADD_FILES = 'ADD_FILES';
 
 export default {
   namespaced: true,
   state: {
-    files: []
+    fileQueue: []
   },
   getters: {
-    files: state => state.files
+    fileQueue: state => state.fileQueue
   },
   mutations: {
-    [ADD_FILES]: (state, files) => state.files.unshift(...files)
+    [ADD_FILES]: (state, data) => state.fileQueue.unshift(...data)
   },
   actions: {
-    addFiles({commit}, files) {
-      commit(ADD_FILES, files);
+    async addFiles({commit}, files) {
+      const newFiles = files.map(file => ({
+        file,
+        sha256: new FileHashCalculator(file)
+      }));
+
+      commit(ADD_FILES, newFiles);
     }
   }
 };
